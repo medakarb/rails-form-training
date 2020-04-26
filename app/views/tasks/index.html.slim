@@ -1,0 +1,23 @@
+h2.page__title タスク一覧
+.row
+  .col-md-12
+    .float-right
+      = link_to '新しくタスクを登録する', new_task_path, class: 'btn btn-primary'
+
+.tasks__container
+  - if @tasks.present?
+    table.table.table-bordered
+      thead
+        tr
+          th.table-active= Task.human_attribute_name(:id)
+          th.table-active= Task.human_attribute_name(:title)
+          th.table-active
+      tbody
+        - @tasks.each do |task|
+          tr
+            td= task.id
+            td= task.title
+            td= link_to '編集', edit_task_path(task)
+  - else
+    .alert.alert-warning
+      | まだタスクは登録されていません
