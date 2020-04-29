@@ -26,8 +26,7 @@ class Task < ApplicationRecord
   validates :status, presence: true
   validates :code, uniqueness: true, format: { with: /\A[0-9a-zA-Z]{6,}\z/ }, allow_blank: true
 
-  validate :require_future, on: :create
-
+  validate :require_future, if: proc { |record| record.limited_on != record.limited_on_was }
 
   def require_future
     errors.add(:limited_on, 'は未来の日付に設定してください') if limited_on.present? && limited_on < Date.current

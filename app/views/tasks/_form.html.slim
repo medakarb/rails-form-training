@@ -12,4 +12,5 @@
     = f.input :limited_on, as: :string, input_html: { class: 'fit-input date-picker' }
     = f.input :notice
   .form-actions
-    = f.submit '登録する', class: 'btn btn-primary'
+    - label = f.object.new_record? ? '登録する' : '更新する'
+    = f.submit label, class: 'btn btn-primary'
