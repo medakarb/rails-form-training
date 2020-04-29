@@ -9,15 +9,23 @@ h2.page__title タスク一覧
     table.table.table-bordered
       thead
         tr
-          th.table-active= Task.human_attribute_name(:id)
-          th.table-active= Task.human_attribute_name(:title)
+          th.table-active.text-center= Task.human_attribute_name(:id)
+          th.table-active.text-center= Task.human_attribute_name(:title)
+          th.table-active.text-center= Task.human_attribute_name(:category)
+          th.table-active.text-center= Task.human_attribute_name(:priority)
+          th.table-active.text-center= Task.human_attribute_name(:limited_on)
           th.table-active
       tbody
         - @tasks.each do |task|
           tr
-            td= task.id
+            td.text-right= task.id
             td= task.title
-            td= link_to '編集', edit_task_path(task)
+            td= task.category.name
+            td.text-right= task.priority
+            td= l task.limited_on if task.limited_on
+            td
+              = link_to '編集', edit_task_path(task), class: 'mr-3'
+              = link_to '削除', task_path(task), method: :delete, data: { confirm: '本当に削除しますか？' }
   - else
     .alert.alert-warning
       | まだタスクは登録されていません

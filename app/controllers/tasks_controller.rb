@@ -2,7 +2,7 @@ class TasksController < ApplicationController
   before_action :set_task, only: %i[edit update destroy]
 
   def index
-    @tasks = Task.all
+    @tasks = Task.includes(:category).order(id: :desc)
   end
 
   def new
@@ -12,7 +12,7 @@ class TasksController < ApplicationController
   def create
     @task = Task.new(task_params)
     if @task.save
-      redirect_to tasks_path
+      redirect_to tasks_path, notice: '登録しました'
     else
       render :new
     end
@@ -22,14 +22,15 @@ class TasksController < ApplicationController
 
   def update
     if @task.update(task_params)
-      redirect_to tasks_path
+      redirect_to tasks_path, notice: '更新しました'
     else
       render :edit
     end
   end
 
   def destroy
-
+    @task.destroy!
+    redirect_to tasks_path, notice: '削除しました'
   end
 
   private
@@ -39,6 +40,6 @@ class TasksController < ApplicationController
   end
 
   def task_params
-    params.require(:task).permit(:title, :body)
+    params.require(:task).permit(:title, :body, :category_id, :priority, :status, :notice, :code, :limited_on)
   end
 end

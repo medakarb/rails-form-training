@@ -13,7 +13,6 @@ gem 'bootsnap', '>= 1.4.2', require: false
 gem 'simple_form'
 gem 'slim-rails'
 gem 'bootstrap', '~> 4.3.1'
-gem 'jquery-rails'
 gem 'enumerize'
 
 group :development, :test do

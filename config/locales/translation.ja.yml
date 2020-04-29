@@ -1,0 +1,13 @@
+ja:
+  activerecord:
+    attributes:
+      task:
+        id: ID
+        title: タイトル
+        body: 内容
+        category: カテゴリ
+        priority: 優先順位
+        status: ステータス
+        notice: 期限が過ぎたら通知する
+        code: コード
+        limited_on: 期限日

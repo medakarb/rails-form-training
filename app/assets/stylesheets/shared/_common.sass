@@ -6,6 +6,10 @@ main
   &.main__navigation
     margin-top: 50px
 
+a
+  color: $base-color
+  &:hover, &:active, &:focus
+    color: $red-dark
 .page__title
   margin-left: 20px
   margin-top: 15px
@@ -21,3 +25,20 @@ main
     width: 4px
     height: 32px
     background: $base-color
+
+abbr[title='required']
+  background: $base-color
+  font-size: 0.8em
+  font-weight: normal
+  padding: 2px 5px
+  color: white
+  border: 1px solid $base-color
+  +border-radius(3px)
+
+.fit-input
+  width: auto
+  &.long
+    width: 500px
+
+  &.short
+    width: 100px

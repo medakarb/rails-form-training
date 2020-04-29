@@ -1,0 +1,6 @@
+ja:
+  enumerize:
+    task:
+      status:
+        enabled: 有効
+        disabled: 無効
