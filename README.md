@@ -1,24 +1,89 @@
-# README
+## 概要
+- RailsのModelのバリデーションとgemのSimpleFormの学習用
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+### Version
+- ruby 2.6.5
+- rails 6.0.2.2
+- sqlite3 1.4.2
 
-Things you may want to cover:
+## 環境構築
+### アプリ初期設定
+```
+bundle install --path vendor/bundle
+yarn install
+```
 
-* Ruby version
+### データベース初期設定
 
-* System dependencies
+```
+$ bundle exec rails db:create
+$ bundle exec rails db:migrate
+$ bundle exec rails db:seed
+```
 
-* Configuration
+## トレーニング
+### 手順
+１. ブランチ切り替え
 
-* Database creation
+```
+$ git checkout start-training
+```
 
-* Database initialization
+２. 課題の実装スタート
 
-* How to run the test suite
+### 課題1 バリデーション実装
+- Rspecが通るようにバリデーションを設定しよう
+  - 以下のコマンドを実行して全てテストが通るように `app/model/task.rb` にコードを追加する
+    - `bundle exec rspec ./spec/models/task_spec.rb`
+- 項目毎の仕様
+  - `title`
+    - 必須
+    - 30文字以内
+  - `body`
+    - 必須
+  - `priority`
+    - 必須
+    - 整数で0より大きい数字
+  - `status`
+    - 必須
+    - 文字列で `enabled` もしくは `disabled` のみ 
+      - gemの `enumerize` を使用
+  - `code`
+    - 必須ではないがユニーク
+    - 半角英数字で6文字以上
+  - `limited_on`
+    - 現在日以降
+      - 独自バリデーションを利用
+    - 値が変わった時のみチェックする
 
-* Services (job queues, cache servers, search engines, etc.)
+### 課題2 フォーム実装
+- Rspecが通るようにフォームを実装しよう
+  - 以下のコマンドを実行してテストが通るように `app/views/tasks/_form.html.slim` にコードを追加しよう
+    - `bundle exec rspec ./spec/features/task_spec.rb`
+- 項目毎の仕様
+  - `title`
+    - テキストボックス
+  - `body`
+    - テキストエリア
+  - `category`
+    - 選択リスト
+      - 空は許容しない
+  - `priority`
+    - テキストボックス(数値入力)
+  - `status`
+    - ラジオボタン
+      - 有効・無効
+  - `code`
+    - テキストボックス
+  - `limited_on`
+    - テキストボックス
+      - フォームをクリックするとカレンダーが表示するように
+        - `bootstrap-datepicker` を利用
+  - `notice`
+    - チェックボックス
 
-* Deployment instructions
+### 完成画面
+#### 登録画面
 
-* ...
+#### 登録画面(エラー時)
+
