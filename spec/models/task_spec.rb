@@ -139,6 +139,11 @@ RSpec.describe Task, type: :model do
         it { is_expected.to be_falsey }
       end
 
+      context '現在の日付の場合' do
+        let(:limited_on) { Date.current }
+        it { is_expected.to be_truthy }
+      end
+
       context '未来の日付の場合' do
         let(:limited_on) { Date.current.tomorrow }
         it { is_expected.to be_truthy }

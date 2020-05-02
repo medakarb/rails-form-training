@@ -89,3 +89,6 @@ $ git checkout start-training
 
 #### 登録画面(エラー時)
 <img width="855" alt="RailsFormTraining" src="https://user-images.githubusercontent.com/592230/80862351-38e63d80-8caf-11ea-9f12-729cedafd177.png">
+
+### 回答について
+- `master` ブランチのコードを参照ください。
