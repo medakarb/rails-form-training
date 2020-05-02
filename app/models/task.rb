@@ -22,7 +22,7 @@ class Task < ApplicationRecord
 
   validates :title, presence: true, length: { maximum: 30 }
   validates :body, presence: true
-  validates :priority, numericality: { only_integer: true, greater_than: 0 }
+  validates :priority, presence: true, numericality: { only_integer: true, greater_than: 0 }
   validates :status, presence: true
   validates :code, uniqueness: true, format: { with: /\A[0-9a-zA-Z]{6,}\z/ }, allow_blank: true
 
