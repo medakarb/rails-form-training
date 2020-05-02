@@ -84,6 +84,8 @@ $ git checkout start-training
 
 ### 完成画面
 #### 登録画面
+<img width="953" alt="RailsFormTraining" src="https://user-images.githubusercontent.com/592230/80862324-08060880-8caf-11ea-8208-9dbf4ad4d722.png">
+
 
 #### 登録画面(エラー時)
-
+<img width="855" alt="RailsFormTraining" src="https://user-images.githubusercontent.com/592230/80862351-38e63d80-8caf-11ea-9f12-729cedafd177.png">
