@@ -6,7 +6,7 @@
     = f.input :body, input_html: { rows: 5 }
     = f.association :category, input_html: { class: 'fit-input' }, include_blank: false
     = f.input :priority, input_html: { class: 'fit-input short' }
-    = f.input :status, checked: f.object.status, as: :radio_buttons
+    = f.input :status, as: :radio_buttons
     = f.input :code, input_html: { class: 'fit-input' }, hint: '半角英数字のみ6文字以上'
     = f.input :limited_on, as: :string, input_html: { class: 'fit-input date-picker', autocomplete: :off }
     = f.input :notice
