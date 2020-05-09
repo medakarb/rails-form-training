@@ -12,16 +12,16 @@
 
 ActiveRecord::Schema.define(version: 2020_04_25_043431) do
 
-  create_table "categories", force: :cascade do |t|
+  create_table "categories", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci", force: :cascade do |t|
     t.string "name", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
   end
 
-  create_table "tasks", force: :cascade do |t|
+  create_table "tasks", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci", force: :cascade do |t|
     t.string "title", null: false
     t.text "body", null: false
-    t.integer "category_id", null: false
+    t.bigint "category_id", null: false
     t.integer "priority", null: false
     t.string "status", null: false
     t.boolean "notice", default: false, null: false

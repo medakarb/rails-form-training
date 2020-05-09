@@ -1,0 +1,33 @@
+version: '3'
+services:
+  db:
+    image: mysql:5.7.22
+    environment:
+      MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
+    ports:
+      - "4306:3306"
+    volumes:
+      - db-data:/var/lib/mysql
+      - ./mysqlconf:/etc/mysql/conf.d
+  web:
+    build: .
+    command: bash -c "rm -f tmp/pids/server.pid && bundle exec rails s -p 3000 -b '0.0.0.0'"
+    volumes:
+      - .:/rails-form-training
+      - bundle:/bundle
+    ports:
+      - "3000:3000"
+    links:
+      - db
+    environment:
+      DATABASE_USERNAME: root
+      DATABASE_PASSWORD: ""
+      DATABASE_HOSTNAME: db
+      DATABASE_NAME: rails-form-training
+    tty: true
+    stdin_open: true
+volumes:
+  db-data:
+    driver: local
+  bundle:
+    driver: local
