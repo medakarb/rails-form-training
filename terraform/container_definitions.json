@@ -1,7 +1,7 @@
 [
   {
     "name": "rails-form-training",
-    "image": "477438465448.dkr.ecr.ap-northeast-1.amazonaws.com/rails-form-training:latest",
+    "image": "477438465448.dkr.ecr.ap-northeast-1.amazonaws.com/rails-form-training/prd:latest",
     "essential": true,
     "logConfiguration": {
       "logDriver": "awslogs",
