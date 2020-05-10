@@ -1,15 +1,12 @@
 default: &default
   adapter: mysql2
   encoding: utf8
-  pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
-  username: root
-  password:
-  host: <%= ENV.fetch('DATABASE_HOSTNAME', 'db') %>
-  database: rails-form-training
-  port: 3306
-  timeout: 5000
   charset: utf8
-  collation: utf8_unicode_ci
+  pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
+  username: <%= ENV['DATABASE_USERNAME'] %>
+  password: <%= ENV['DATABASE_PASSWORD'] %>
+  host: <%= ENV['DATABASE_HOSTNAME'] %>
+  database: <%= ENV['DATABASE_NAME'] %>
 
 development:
   <<: *default
@@ -18,9 +15,8 @@ test:
   <<: *default
   database: rails-form-training_test
 
+staging:
+  <<: *default
+
 production:
   <<: *default
-  database: <%= ENV['DB_NAME'] %>
-  username: <%= ENV['DB_USERNAME'] %>
-  password: <%= ENV['DB_PASSWORD'] %>
-  host: <%= ENV['DB_HOSTNAME'] %>

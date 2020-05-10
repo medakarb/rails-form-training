@@ -1,49 +1,43 @@
-FROM ruby:2.6.5-alpine3.11
+FROM node:11.13.0-stretch-slim as node
+FROM ruby:2.6.3-slim-stretch
+
 ENV LANG C.UTF-8
-RUN apk upgrade && \
-    apk add --no-cache \
-    bash \
-    build-base \
-    curl-dev \
-    git \
-    graphviz \
-    imagemagick \
-    imagemagick-dev \
-    less \
-    libxml2-dev \
-    libxslt-dev \
-    mysql-client \
-    mysql-dev \
-    nodejs \
-    npm \
-    openssl \
-    readline \
-    readline-dev \
-    tar \
-    ttf-freefont \
-    tzdata \
-    udev \
-    wget \
-    yaml \
-    yaml-dev\
-    zlib \
-    zlib-dev
 
-RUN npm install -g yarn
+RUN apt-get update && apt-get install -yqq \
+        default-mysql-client-core \
+        default-libmysqlclient-dev \
+        imagemagick libmagickcore-dev libmagickwand-dev \
+        build-essential \
+        git \
+        curl \
+        openssh-client \
+        gnupg \
+        wget \
+        apt-transport-https \
+        --no-install-recommends && \
+        rm -rf /var/lib/apt/lists/*
 
-RUN gem install bundler
-RUN gem update
+RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add - \
+    && echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list
 
-ENV APP_HOME /rails-form-training
-RUN mkdir $APP_HOME
-WORKDIR $APP_HOME
+RUN apt-get update && apt-get install -y unzip && \
+    CHROME_DRIVER_VERSION=`curl -sS chromedriver.storage.googleapis.com/LATEST_RELEASE` && \
+    wget -N http://chromedriver.storage.googleapis.com/$CHROME_DRIVER_VERSION/chromedriver_linux64.zip -P ~/ && \
+    unzip ~/chromedriver_linux64.zip -d ~/ && \
+    rm ~/chromedriver_linux64.zip && \
+    chown root:root ~/chromedriver && \
+    chmod 755 ~/chromedriver && \
+    mv ~/chromedriver /usr/bin/chromedriver && \
+    curl -sS -o - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add - && \
+    echo "deb http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google-chrome.list && \
+    apt-get -yqq update && \
+    apt-get -yqq install google-chrome-stable yarn \
+    --no-install-recommends && \
+    rm -rf /var/lib/apt/lists/*
 
-ENV GEM_HOME=/bundle
+COPY --from=node /usr/local/bin/node /usr/local/bin/
 
-ADD Gemfile* $APP_HOME/
+WORKDIR /rails-form-training
 
-ENV BUNDLE_GEMFILE=$APP_HOME/Gemfile \
-  BUNDLE_JOBS=4 \
-  BUNDLE_PATH=$GEM_HOME
-
-ADD . $APP_HOME
+COPY Gemfile.lock .
+RUN gem update --system && gem install bundler -v $(cat Gemfile.lock | tail -1 | tr -d " ")

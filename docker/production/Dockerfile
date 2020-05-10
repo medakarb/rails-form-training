@@ -1,54 +1,61 @@
-FROM ruby:2.6.5-alpine3.11
+FROM node:11.13.0-stretch-slim as node
+FROM ruby:2.6.5-slim-stretch
+
 ENV LANG C.UTF-8
-RUN apk upgrade && \
-    apk add --no-cache \
-    bash \
-    build-base \
-    curl-dev \
-    git \
-    graphviz \
-    imagemagick \
-    imagemagick-dev \
-    less \
-    libxml2-dev \
-    libxslt-dev \
-    mysql-client \
-    mysql-dev \
-    nodejs \
-    npm \
-    openssl \
-    readline \
-    readline-dev \
-    tar \
-    ttf-freefont \
-    tzdata \
-    udev \
-    wget \
-    yaml \
-    yaml-dev\
-    zlib \
-    zlib-dev
 
-RUN npm install -g yarn
+RUN apt-get update && apt-get install -yqq \
+        default-mysql-client-core \
+        default-libmysqlclient-dev \
+        imagemagick libmagickcore-dev libmagickwand-dev \
+        build-essential \
+        git \
+        curl \
+        openssh-client \
+        gnupg \
+        wget \
+        apt-transport-https \
+        jq \
+        python3-pip \
+        python3-setuptools \
+        --no-install-recommends && \
+        rm -rf /var/lib/apt/lists/*
 
-RUN gem install bundler
-RUN gem update
+RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add - \
+    && echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list
 
-ENV APP_HOME /rails-form-training
-RUN mkdir $APP_HOME
-WORKDIR $APP_HOME
+RUN apt-get update && apt-get install -y yarn
 
-ENV RAILS_ENV=production
+# Install the AWS CLI
+RUN pip3 install --upgrade pip
+RUN pip3 install awscli
+
+COPY --from=node /usr/local/bin/node /usr/local/bin/
+
+WORKDIR /rails-form-training
+
+ARG RAILS_ENV=production
+ARG RACK_ENV=production
 ARG SECRET_KEY_BASE
-ENV GEM_HOME=/bundle
+ARG AWS_ACCESS_KEY_ID=''
+ARG AWS_SECRET_ACCESS_KEY=''
 
-ADD Gemfile* $APP_HOME/
+COPY Gemfile .
+COPY Gemfile.lock .
+RUN cat Gemfile.lock | tail -1 | tr -d " " > BUNDLER_VERSION
+RUN gem update --system && gem install bundler -v `cat BUNDLER_VERSION`
+RUN bundle config set without 'test development local'
+RUN bundle install --jobs=4
 
-ENV BUNDLE_GEMFILE=$APP_HOME/Gemfile \
-  BUNDLE_JOBS=4 \
-  BUNDLE_PATH=$GEM_HOME
+COPY config/application.rb config/boot.rb config/environment.rb config/database.yml config/
+COPY config/initializers/assets.rb config/initializers/
+COPY config/environments/ config/environments/
+COPY log/.keep log/
+COPY bin/ bin/
+COPY Rakefile .
+COPY docker-entrypoint.sh .
+COPY app/assets app/assets
+COPY . .
 
-ADD . $APP_HOME
-
+ENTRYPOINT ["./docker-entrypoint.sh"]
 RUN env RAILS_ENV=${RAILS_ENV} SECRET_KEY_BASE=${SECRET_KEY_BASE}  bundle exec rake assets:precompile
 CMD ["bundle", "exec", "rails", "s", "puma", "-b", "0.0.0.0", "-p", "3000", "-e", "${RAILS_ENV}"]
