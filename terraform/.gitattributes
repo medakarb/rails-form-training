@@ -1,1 +1,1 @@
-.terraform/plugins/drawin_amd64/terraform-provider-aws_v2.10.0_x4 filter=lfs diff=lfs merge=lfs -text
+.terraform/plugins/drawin_amd64/terraform-provider-aws_v2.61.0_x4 filter=lfs diff=lfs merge=lfs -text
