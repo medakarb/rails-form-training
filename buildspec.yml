@@ -16,5 +16,5 @@ phases:
   post_build:
     commands:
       - printf '[{"name":"rails-form-training","imageUri":"%s"}]' $IMAGE > imagedefinitions.json
-artififacts:
+artifacts:
   files: imagedefinitions.json
