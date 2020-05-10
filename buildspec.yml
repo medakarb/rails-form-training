@@ -11,8 +11,8 @@ phases:
       - IMAGE=$REPO/prd:latest
   build:
     commands:
-      - docker build -f ./docker/production/Dockerfile .
-      - docker build -t $IMAGE .
+      - docker build -f ./docker/production/Dockerfile -t rails-form-training/prd .
+      - docker tag rails-form-training/prd $IMAGE
       - docker push $IMAGE
   post_build:
     commands:
