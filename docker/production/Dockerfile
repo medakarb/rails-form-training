@@ -24,6 +24,8 @@ RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add - \
     && echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list
 
 RUN apt-get update && apt-get install -y yarn
+#RUN curl -SL https://deb.nodesource.com/setup_9.x | bash
+#RUN apt-get install -y nodejs
 
 # Install the AWS CLI
 RUN pip3 install --upgrade pip
@@ -35,7 +37,7 @@ WORKDIR /rails-form-training
 
 ARG RAILS_ENV=production
 ARG RACK_ENV=production
-ARG SECRET_KEY_BASE
+ARG SECRET_KEY_BASE=1
 ARG AWS_ACCESS_KEY_ID=''
 ARG AWS_SECRET_ACCESS_KEY=''
 
