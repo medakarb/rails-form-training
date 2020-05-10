@@ -816,7 +816,7 @@ resource "aws_codepipeline" "rails-form-training" {
 
       configuration = {
         ClusterName = aws_ecs_cluster.rails-form-training.name
-        ServiceName = aws_ecs_cluster.rails-form-training.name
+        ServiceName = aws_ecs_service.rails-form-training.name
         FileName    = "imagedefinitions.json"
       }
     }
