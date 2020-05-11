@@ -11,6 +11,16 @@
         "awslogs-group": "/ecs/rails-form-training"
       }
     },
+    "secrets": [
+      {
+        "name": "SECRET_KEY_BASE",
+        "valueFrom": "/rails-form-training/prd/SECRET_KEY_BASE"
+      },
+      {
+        "name": "RAILS_ENV",
+        "value": "production"
+      }
+    ],
     "portMappings": [
       {
         "protocol": "tcp",
