@@ -8,7 +8,7 @@ phases:
     commands:
       - $(aws ecr get-login --region $AWS_DEFAULT_REGION --no-include-email)
       - REPO=$(aws ecr describe-repositories --repository-names rails-form-training/prd --output text --query "repositories[0].repositoryUri")
-      - IMAGE=$REPO/prd:latest
+      - IMAGE=$REPO:latest
   build:
     commands:
       - docker build -f ./docker/production/Dockerfile -t rails-form-training/prd .
