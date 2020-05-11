@@ -11,7 +11,7 @@
         "awslogs-group": "/ecs/rails-form-training"
       }
     },
-    "secrets": [
+    "environment": [
       {
         "name": "SECRET_KEY_BASE",
         "valueFrom": "/rails-form-training/prd/SECRET_KEY_BASE"
