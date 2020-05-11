@@ -7,7 +7,7 @@ phases:
   pre_build:
     commands:
       - $(aws ecr get-login --region $AWS_DEFAULT_REGION --no-include-email)
-      - REPO=$(aws ecr describe-repositories --repository-names rails-form-training --output text --query "repositories[0].repositoryUri")
+      - REPO=$(aws ecr describe-repositories --repository-names rails-form-training/prd --output text --query "repositories[0].repositoryUri")
       - IMAGE=$REPO/prd:latest
   build:
     commands:
