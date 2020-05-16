@@ -1,17 +1,17 @@
 // IAM
 data "aws_iam_policy_document" "allow_describe_regions" {
   statement {
-    effect		= "Allow"
-    actions		= ["ec2:DescribeRegions"]
+    effect    = "Allow"
+    actions   = ["ec2:DescribeRegions"]
     resources = ["*"]
   }
 }
 
 module "describe_regions_for_ec2" {
-  source      = "./iam_role"
-  name        = "describe-regions-for-ec2"
-  identifier  = "ec2.amazonaws.com"
-  policy      = data.aws_iam_policy_document.allow_describe_regions.json
+  source     = "./iam_role"
+  name       = "describe-regions-for-ec2"
+  identifier = "ec2.amazonaws.com"
+  policy     = data.aws_iam_policy_document.allow_describe_regions.json
 }
 
 // S3
@@ -70,12 +70,12 @@ resource "aws_s3_bucket_policy" "alb_log" {
 
 data "aws_iam_policy_document" "alb_log" {
   statement {
-    effect = "Allow"
-    actions = ["s3:PutObject"]
+    effect    = "Allow"
+    actions   = ["s3:PutObject"]
     resources = ["arn:aws:s3:::${aws_s3_bucket.alb_log.id}/*"]
 
     principals {
-      type = "AWS"
+      type        = "AWS"
       identifiers = ["582318560864"]
     }
   }
@@ -83,9 +83,9 @@ data "aws_iam_policy_document" "alb_log" {
 
 // VPC
 resource "aws_vpc" "rails-form-training" {
-  cidr_block            = "10.0.0.0/16"
-  enable_dns_support    = true
-  enable_dns_hostnames  = true
+  cidr_block           = "10.0.0.0/16"
+  enable_dns_support   = true
+  enable_dns_hostnames = true
 
   tags = {
     Name = "rails-form-training"
@@ -269,7 +269,7 @@ resource "aws_lb_listener" "http" {
     fixed_response {
       content_type = "text/plain"
       message_body = "これは「HTTP」です"
-      status_code = "200"
+      status_code  = "200"
     }
   }
 }
@@ -287,7 +287,7 @@ resource "aws_lb_listener" "https" {
     fixed_response {
       content_type = "text/plain"
       message_body = "これは「HTTPS」です"
-      status_code = "200"
+      status_code  = "200"
     }
   }
 }
@@ -389,7 +389,7 @@ resource "aws_lb_listener_rule" "rails-form-training" {
   }
 
   condition {
-    field = "path-pattern"
+    field  = "path-pattern"
     values = ["/*"]
   }
 }
@@ -420,7 +420,7 @@ resource "aws_ecs_service" "rails-form-training" {
 
   network_configuration {
     assign_public_ip = false
-    security_groups = [module.nginx_sg.security_group_id]
+    security_groups  = [module.nginx_sg.security_group_id]
 
     subnets = [
       aws_subnet.private_0.id,
@@ -448,13 +448,13 @@ module "nginx_sg" {
 }
 
 resource "aws_ecs_task_definition" "rails-form-training_batch" {
-  family      = "rails-form-training-batch"
-  cpu         = "256"
-  memory       = "512"
-  network_mode = "awsvpc"
+  family                   = "rails-form-training-batch"
+  cpu                      = "256"
+  memory                   = "512"
+  network_mode             = "awsvpc"
   requires_compatibilities = ["FARGATE"]
-  container_definitions = file("./batch_container_definitions.json")
-  execution_role_arn = module.ecs_task_execution_role.iam_role_arn
+  container_definitions    = file("./batch_container_definitions.json")
+  execution_role_arn       = module.ecs_task_execution_role.iam_role_arn
 }
 
 data "aws_iam_policy" "ecs_task_execution_role_policy" {
@@ -472,10 +472,10 @@ data "aws_iam_policy_document" "ecs_task_execution" {
 }
 
 module "ecs_task_execution_role" {
-  source      = "./iam_role"
-  name        = "ecs-task-execution"
-  identifier  = "ecs-tasks.amazonaws.com"
-  policy      = data.aws_iam_policy_document.ecs_task_execution.json
+  source     = "./iam_role"
+  name       = "ecs-task-execution"
+  identifier = "ecs-tasks.amazonaws.com"
+  policy     = data.aws_iam_policy_document.ecs_task_execution.json
 }
 
 // CloudWatch Logs
@@ -491,9 +491,9 @@ resource "aws_cloudwatch_event_target" "rails-form-training_batch" {
   arn       = aws_ecs_cluster.rails-form-training.arn
 
   ecs_target {
-    launch_type = "FARGATE"
-    task_count = 1
-    platform_version = "1.3.0"
+    launch_type         = "FARGATE"
+    task_count          = 1
+    platform_version    = "1.3.0"
     task_definition_arn = aws_ecs_task_definition.rails-form-training_batch.arn
 
     network_configuration {
@@ -509,10 +509,10 @@ resource "aws_cloudwatch_log_group" "for_ecs_scheduled_tasks" {
 }
 
 module "ecs_events_role" {
-  source      = "./iam_role"
-  name        = "ecs-events"
-  identifier  = "events.amazonaws.com"
-  policy      = data.aws_iam_policy.ecs_events_role_policy.policy
+  source     = "./iam_role"
+  name       = "ecs-events"
+  identifier = "events.amazonaws.com"
+  policy     = data.aws_iam_policy.ecs_events_role_policy.policy
 }
 
 data "aws_iam_policy" "ecs_events_role_policy" {
@@ -565,7 +565,7 @@ resource "aws_ssm_parameter" "db_password" {
 
 // RDS
 resource "aws_db_parameter_group" "rails-form-training" {
-  name = "rails-form-training"
+  name   = "rails-form-training"
   family = "mysql5.7"
 
   parameter {
@@ -692,10 +692,10 @@ data "aws_iam_policy_document" "codebuild" {
 }
 
 module "codebuild_role" {
-  source = "./iam_role"
-  name = "codebuild"
+  source     = "./iam_role"
+  name       = "codebuild"
   identifier = "codebuild.amazonaws.com"
-  policy = data.aws_iam_policy_document.codebuild.json
+  policy     = data.aws_iam_policy_document.codebuild.json
 }
 
 resource "aws_codebuild_project" "rails-form-training" {
@@ -721,7 +721,7 @@ resource "aws_codebuild_project" "rails-form-training" {
 // CodePipeline
 data "aws_iam_policy_document" "codepipeline" {
   statement {
-    effect = "Allow"
+    effect    = "Allow"
     resources = ["*"]
 
     actions = [
@@ -743,10 +743,10 @@ data "aws_iam_policy_document" "codepipeline" {
 }
 
 module "codepipeline_role" {
-  source = "./iam_role"
-  name = "codepipeline"
+  source     = "./iam_role"
+  name       = "codepipeline"
   identifier = "codepipeline.amazonaws.com"
-  policy = data.aws_iam_policy_document.codepipeline.json
+  policy     = data.aws_iam_policy_document.codepipeline.json
 }
 
 resource "aws_s3_bucket" "artifact" {
@@ -762,7 +762,7 @@ resource "aws_s3_bucket" "artifact" {
 }
 
 resource "aws_codepipeline" "rails-form-training" {
-  name = "rails-form-training"
+  name     = "rails-form-training"
   role_arn = module.codepipeline_role.iam_role_arn
 
   stage {
@@ -777,9 +777,9 @@ resource "aws_codepipeline" "rails-form-training" {
       output_artifacts = ["Source"]
 
       configuration = {
-        Owner   = "medakarb"
-        Repo    = "rails-form-training"
-        Branch = "test-terraform"
+        Owner                = "medakarb"
+        Repo                 = "rails-form-training"
+        Branch               = "test-terraform"
         PollForSourceChanges = false
       }
     }
@@ -926,13 +926,13 @@ resource "aws_s3_bucket" "operation" {
 }
 
 resource "aws_cloudwatch_log_group" "operation" {
-  name = "/operation"
+  name              = "/operation"
   retention_in_days = 180
 }
 
 resource "aws_ssm_document" "session_manager_run_shell" {
-  name = "SSM-SessionManagerRunShell"
-  document_type = "Session"
+  name            = "SSM-SessionManagerRunShell"
+  document_type   = "Session"
   document_format = "JSON"
 
   content = <<EOF
